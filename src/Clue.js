@@ -63,9 +63,11 @@ Clue.propTypes = {
   children: PropTypes.node,
   /** whether the answer/guess is correct */
   correct: PropTypes.bool,
+  isFilled: PropTypes.bool,
 };
 
 Clue.defaultProps = {
   children: undefined,
   correct: undefined,
+  isFilled: undefined,
 };

@@ -35,6 +35,7 @@ DirectionClues.propTypes = {
       clue: PropTypes.node.isRequired,
       /** whether the answer/guess is correct */
       correct: PropTypes.bool,
+      isFilled: PropTypes.bool,
     })
   ).isRequired,
 };

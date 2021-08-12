@@ -105,6 +105,7 @@ const Crossword = React.forwardRef(
       onCorrect,
       onLoadedCorrect,
       onCrosswordCorrect,
+      onCrosswordComplete,
       onCellChange,
       useStorage,
       theme,
@@ -122,6 +123,7 @@ const Crossword = React.forwardRef(
     const [bulkChange, setBulkChange] = useState(null);
     const [checkQueue, setCheckQueue] = useState([]);
     const [crosswordCorrect, setCrosswordCorrect] = useState(false);
+    const [crosswordComplete, setCrosswordComplete] = useState(false);
 
     const inputRef = useRef();
 
@@ -192,6 +194,7 @@ const Crossword = React.forwardRef(
       [onCorrect]
     );
 
+    // TODO: consider renaming that to checkCorrectnessAndFilledness
     const checkCorrectness = useCallback(
       (row, col) => {
         const cell = getCellData(row, col);
@@ -210,11 +213,12 @@ const Crossword = React.forwardRef(
           // We start by looking at the current cell... if it's not correct, we
           // don't need to check anything else!
           let correct = cell.guess === cell.answer;
+          let filled = cell.guess !== '';
 
           if (correct) {
             // We *could* compare cell.guess against cell.answer for all the
             // cells, but info.answer is a simple string and gets us the length
-            // as well (and we only have to calulate row/col math once).
+            // as well (and we only have to calculate row/col math once).
             for (let i = 0; i < info.answer.length; i++) {
               const checkCell = getCellData(
                 info.row + (across ? 0 : i),
@@ -228,6 +232,20 @@ const Crossword = React.forwardRef(
             }
           }
 
+          if (filled) {
+            for (let i = 0; i < info.answer.length; i++) {
+              const checkCell = getCellData(
+                info.row + (across ? 0 : i),
+                info.col + (across ? i : 0)
+              );
+
+              if (checkCell.guess === '') {
+                filled = false;
+                break;
+              }
+            }
+          }
+
           // update the clue state
           setClues(
             produce((draft) => {
@@ -235,6 +253,7 @@ const Crossword = React.forwardRef(
                 (i) => i.number === number
               );
               clueInfo.correct = correct;
+              clueInfo.isFilled = filled;
             })
           );
 
@@ -252,16 +271,24 @@ const Crossword = React.forwardRef(
         return;
       }
 
-      checkQueue.forEach(({ row, col }) => checkCorrectness(row, col));
+      checkQueue.forEach(({ row, col }) => {
+        checkCorrectness(row, col);
+      });
       setCheckQueue([]);
     }, [checkQueue, checkCorrectness]);
 
-    // Any time the clues change, determine if they are all correct or not.
+    // Any time the clues change, determine if they are all correct or not. Or filled.
     useEffect(() => {
       setCrosswordCorrect(
         clues &&
           bothDirections.every((direction) =>
             clues[direction].every((clueInfo) => clueInfo.correct)
+          )
+      );
+      setCrosswordComplete(
+        clues &&
+          bothDirections.every((direction) =>
+            clues[direction].every((clueInfo) => clueInfo.isFilled)
           )
       );
     }, [clues]);
@@ -273,6 +300,12 @@ const Crossword = React.forwardRef(
         onCrosswordCorrect(crosswordCorrect);
       }
     }, [crosswordCorrect, onCrosswordCorrect]);
+
+    useEffect(() => {
+      if (onCrosswordComplete) {
+        onCrosswordComplete(crosswordComplete);
+      }
+    }, [crosswordComplete, onCrosswordComplete]);
 
     // focus and movement
     const focus = useCallback(() => {
@@ -476,6 +509,7 @@ const Crossword = React.forwardRef(
         loadedCorrect.forEach(([direction, num]) => {
           const clueInfo = clues[direction].find((i) => i.number === num);
           clueInfo.correct = true;
+          clueInfo.isFilled = true;
         });
       }
 
@@ -546,7 +580,7 @@ const Crossword = React.forwardRef(
         // *don't* event.preventDefault(), because we want the input to actually
         // take focus
 
-        // Like general cell-clicks, cliking on the input can change direction.
+        // Like general cell-clicks, clicking on the input can change direction.
         // Unlike cell clicks, we *know* we're clicking on the already-focused
         // cell!
         const other = otherDirection(currentDirection);
@@ -608,6 +642,7 @@ const Crossword = React.forwardRef(
               bothDirections.forEach((direction) => {
                 draft[direction].forEach((clueInfo) => {
                   delete clueInfo.correct;
+                  delete clueInfo.isFilled;
                 });
               });
             })
@@ -640,6 +675,7 @@ const Crossword = React.forwardRef(
               bothDirections.forEach((direction) => {
                 draft[direction].forEach((clueInfo) => {
                   clueInfo.correct = true;
+                  clueInfo.isFilled = true;
                 });
               });
             })
@@ -666,8 +702,12 @@ const Crossword = React.forwardRef(
         isCrosswordCorrect: () => {
           return crosswordCorrect;
         },
+
+        isCrosswordComplete: () => {
+          return crosswordComplete;
+        },
       }),
-      [data, onLoadedCorrect, useStorage, focus, crosswordCorrect]
+      [data, onLoadedCorrect, useStorage, focus, crosswordCorrect, crosswordComplete]
     );
 
     // constants for rendering...
@@ -850,6 +890,7 @@ Crossword.propTypes = {
   onLoadedCorrect: PropTypes.func,
   /** callback function that's called when the overall crossword is completely correct (or not) */
   onCrosswordCorrect: PropTypes.func,
+  onCrosswordComplete: PropTypes.func,
 
   /**
    *  callback function called when a cell changes (e.g. when the user types a
@@ -869,6 +910,7 @@ Crossword.defaultProps = {
   onCorrect: null,
   onLoadedCorrect: null,
   onCrosswordCorrect: null,
+  onCrosswordComplete: null,
   onCellChange: null,
 };
 
