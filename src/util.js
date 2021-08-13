@@ -72,6 +72,24 @@ export function createEmptyGrid(size) {
   return gridData;
 }
 
+export function setCluesFilled(gridData, clues, data, direction) {
+  const dir = directionInfo[direction];
+
+  Object.entries(data[direction]).forEach(([number, info], idx) => {
+    const { row: rowStart, col: colStart, answer } = info;
+    let isFilled = true;
+    for (let i = 0; i < answer.length; i++) {
+      const row = rowStart + (dir.primary === 'row' ? i : 0);
+      const col = colStart + (dir.primary === 'col' ? i : 0);
+      const cellData = gridData[row][col];
+      if (cellData.guess === '') {
+        isFilled = false;
+      }
+    }
+    clues[direction][idx].isFilled = isFilled;
+  });
+}
+
 export function fillClues(gridData, clues, data, direction) {
   const dir = directionInfo[direction];
 

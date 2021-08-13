@@ -23,6 +23,7 @@ import {
   saveGuesses,
   loadGuesses,
   findCorrectAnswers,
+  setCluesFilled
 } from './util';
 
 import { CrosswordContext, CrosswordSizeContext } from './context';
@@ -504,6 +505,10 @@ const Crossword = React.forwardRef(
       let loadedCorrect;
       if (useStorage) {
         loadGuesses(gridData, defaultStorageKey);
+
+        setCluesFilled(gridData, clues, data, 'across');
+        setCluesFilled(gridData, clues, data, 'down');
+
         loadedCorrect = findCorrectAnswers(data, gridData);
 
         loadedCorrect.forEach(([direction, num]) => {
@@ -707,7 +712,14 @@ const Crossword = React.forwardRef(
           return crosswordComplete;
         },
       }),
-      [data, onLoadedCorrect, useStorage, focus, crosswordCorrect, crosswordComplete]
+      [
+        data,
+        onLoadedCorrect,
+        useStorage,
+        focus,
+        crosswordCorrect,
+        crosswordComplete,
+      ]
     );
 
     // constants for rendering...
