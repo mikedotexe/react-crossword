@@ -23,7 +23,7 @@ import {
   saveGuesses,
   loadGuesses,
   findCorrectAnswers,
-  setCluesFilled
+  setCluesFilled,
 } from './util';
 
 import { CrosswordContext, CrosswordSizeContext } from './context';
@@ -255,6 +255,10 @@ const Crossword = React.forwardRef(
               );
               clueInfo.correct = correct;
               clueInfo.isFilled = filled;
+              if (filled) {
+                const nextNumber = clueInfo.filledCounter + 1 || 0;
+                clueInfo.filledCounter = nextNumber;
+              }
             })
           );
 
@@ -286,12 +290,14 @@ const Crossword = React.forwardRef(
             clues[direction].every((clueInfo) => clueInfo.correct)
           )
       );
-      setCrosswordComplete(
+      if (
         clues &&
-          bothDirections.every((direction) =>
-            clues[direction].every((clueInfo) => clueInfo.isFilled)
-          )
-      );
+        bothDirections.every((direction) =>
+          clues[direction].every((clueInfo) => clueInfo.isFilled)
+        )
+      ) {
+        setCrosswordComplete(crosswordComplete + 1);
+      }
     }, [clues]);
 
     // Let the consumer know everything's correct (or not) if they've asked to
@@ -515,6 +521,7 @@ const Crossword = React.forwardRef(
           const clueInfo = clues[direction].find((i) => i.number === num);
           clueInfo.correct = true;
           clueInfo.isFilled = true;
+          clueInfo.filledCounter += 1;
         });
       }
 
@@ -681,6 +688,7 @@ const Crossword = React.forwardRef(
                 draft[direction].forEach((clueInfo) => {
                   clueInfo.correct = true;
                   clueInfo.isFilled = true;
+                  clueInfo.filledCounter += 1;
                 });
               });
             })

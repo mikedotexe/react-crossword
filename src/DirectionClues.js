@@ -36,6 +36,7 @@ DirectionClues.propTypes = {
       /** whether the answer/guess is correct */
       correct: PropTypes.bool,
       isFilled: PropTypes.bool,
+      filledCounter: PropTypes.number,
     })
   ).isRequired,
 };

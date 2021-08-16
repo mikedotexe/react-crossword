@@ -87,6 +87,9 @@ export function setCluesFilled(gridData, clues, data, direction) {
       }
     }
     clues[direction][idx].isFilled = isFilled;
+    if (isFilled) {
+      clues[direction][idx].filledCounter += 1;
+    }
   });
 }
 
