@@ -9,6 +9,7 @@ exports.isAcross = isAcross;
 exports.otherDirection = otherDirection;
 exports.calculateExtents = calculateExtents;
 exports.createEmptyGrid = createEmptyGrid;
+exports.setCluesFilled = setCluesFilled;
 exports.fillClues = fillClues;
 exports.createGridData = createGridData;
 exports.byNumber = byNumber;
@@ -97,11 +98,39 @@ function createEmptyGrid(size) {
   return gridData;
 }
 
-function fillClues(gridData, clues, data, direction) {
+function setCluesFilled(gridData, clues, data, direction) {
   var dir = directionInfo[direction];
-  Object.entries(data[direction]).forEach(function (_ref3) {
+  Object.entries(data[direction]).forEach(function (_ref3, idx) {
     var number = _ref3[0],
         info = _ref3[1];
+    var rowStart = info.row,
+        colStart = info.col,
+        answer = info.answer;
+    var isFilled = true;
+
+    for (var i = 0; i < answer.length; i++) {
+      var row = rowStart + (dir.primary === 'row' ? i : 0);
+      var col = colStart + (dir.primary === 'col' ? i : 0);
+      var cellData = gridData[row][col];
+
+      if (cellData.guess === '') {
+        isFilled = false;
+      }
+    }
+
+    clues[direction][idx].isFilled = isFilled;
+
+    if (isFilled) {
+      clues[direction][idx].filledCounter += 1;
+    }
+  });
+}
+
+function fillClues(gridData, clues, data, direction) {
+  var dir = directionInfo[direction];
+  Object.entries(data[direction]).forEach(function (_ref4) {
+    var number = _ref4[0],
+        info = _ref4[1];
     var rowStart = info.row,
         colStart = info.col,
         clue = info.clue,
@@ -217,9 +246,9 @@ function loadGuesses(gridData, storageKey) {
 }
 
 function deserializeGuesses(gridData, guesses) {
-  Object.entries(guesses).forEach(function (_ref4) {
-    var key = _ref4[0],
-        val = _ref4[1];
+  Object.entries(guesses).forEach(function (_ref5) {
+    var key = _ref5[0],
+        val = _ref5[1];
 
     var _key$split = key.split('_'),
         r = _key$split[0],
@@ -236,9 +265,9 @@ function findCorrectAnswers(data, gridData) {
   var correctAnswers = [];
   bothDirections.forEach(function (direction) {
     var across = isAcross(direction);
-    Object.entries(data[direction]).forEach(function (_ref5) {
-      var num = _ref5[0],
-          info = _ref5[1];
+    Object.entries(data[direction]).forEach(function (_ref6) {
+      var num = _ref6[0],
+          info = _ref6[1];
       var row = info.row,
           col = info.col;
       var correct = true;

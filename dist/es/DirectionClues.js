@@ -48,7 +48,8 @@ process.env.NODE_ENV !== "production" ? DirectionClues.propTypes = {
 
     /** whether the answer/guess is correct */
     correct: _propTypes["default"].bool,
-    isFilled: _propTypes["default"].bool
+    isFilled: _propTypes["default"].bool,
+    filledCounter: _propTypes["default"].number
   })).isRequired
 } : void 0;
 DirectionClues.defaultProps = {};

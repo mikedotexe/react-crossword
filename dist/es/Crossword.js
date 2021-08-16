@@ -46,7 +46,7 @@ var OuterWrapper = _styledComponents["default"].div.attrs(function (props) {
   };
 }).withConfig({
   displayName: "Crossword__OuterWrapper",
-  componentId: "pjgvvu-0"
+  componentId: "sc-1siv8iq-0"
 })(["margin:0;padding:0;border:0;display:flex;flex-direction:row;@media (max-width:", "){flex-direction:column;}"], function (props) {
   return props.theme.columnBreakpoint;
 });
@@ -57,7 +57,7 @@ var GridWrapper = _styledComponents["default"].div.attrs(function () {
   };
 }).withConfig({
   displayName: "Crossword__GridWrapper",
-  componentId: "pjgvvu-1"
+  componentId: "sc-1siv8iq-1"
 })(["min-width:20rem;max-width:60rem;width:auto;flex:2 1 50%;"]);
 
 var CluesWrapper = _styledComponents["default"].div.attrs(function () {
@@ -66,7 +66,7 @@ var CluesWrapper = _styledComponents["default"].div.attrs(function () {
   };
 }).withConfig({
   displayName: "Crossword__CluesWrapper",
-  componentId: "pjgvvu-2"
+  componentId: "sc-1siv8iq-2"
 })(["padding:0 1em;flex:1 2 25%;@media (max-width:", "){margin-top:2em;}.direction{margin-bottom:2em;.header{margin-top:0;margin-bottom:0.5em;}div{margin-top:0.5em;}}"], function (props) {
   return props.theme.columnBreakpoint;
 });
@@ -241,6 +241,11 @@ var Crossword = /*#__PURE__*/_react["default"].forwardRef(function (_ref, ref) {
         });
         clueInfo.correct = correct;
         clueInfo.isFilled = filled;
+
+        if (filled) {
+          var nextNumber = clueInfo.filledCounter + 1 || 0;
+          clueInfo.filledCounter = nextNumber;
+        }
       }));
 
       if (correct) {
@@ -268,11 +273,14 @@ var Crossword = /*#__PURE__*/_react["default"].forwardRef(function (_ref, ref) {
         return clueInfo.correct;
       });
     }));
-    setCrosswordComplete(clues && _util.bothDirections.every(function (direction) {
+
+    if (clues && _util.bothDirections.every(function (direction) {
       return clues[direction].every(function (clueInfo) {
         return clueInfo.isFilled;
       });
-    }));
+    })) {
+      setCrosswordComplete(crosswordComplete + 1);
+    }
   }, [clues]); // Let the consumer know everything's correct (or not) if they've asked to
   // be informed.
 
@@ -465,6 +473,8 @@ var Crossword = /*#__PURE__*/_react["default"].forwardRef(function (_ref, ref) {
 
     if (useStorage) {
       (0, _util.loadGuesses)(gridData, defaultStorageKey);
+      (0, _util.setCluesFilled)(gridData, clues, data, 'across');
+      (0, _util.setCluesFilled)(gridData, clues, data, 'down');
       loadedCorrect = (0, _util.findCorrectAnswers)(data, gridData);
       loadedCorrect.forEach(function (_ref3) {
         var direction = _ref3[0],
@@ -474,6 +484,7 @@ var Crossword = /*#__PURE__*/_react["default"].forwardRef(function (_ref, ref) {
         });
         clueInfo.correct = true;
         clueInfo.isFilled = true;
+        clueInfo.filledCounter += 1;
       });
     }
 
@@ -604,6 +615,7 @@ var Crossword = /*#__PURE__*/_react["default"].forwardRef(function (_ref, ref) {
             draft[direction].forEach(function (clueInfo) {
               clueInfo.correct = true;
               clueInfo.isFilled = true;
+              clueInfo.filledCounter += 1;
             });
           });
         })); // trigger onLoadedCorrect with every clue!
