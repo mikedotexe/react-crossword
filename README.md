@@ -1,33 +1,21 @@
 # ![react-crossword: A flexible, responsive, and easy-to-use crossword component for React apps.](./docs/react-crossword.png)
 
-[![npm version](https://img.shields.io/npm/v/@jaredreisinger/react-crossword.svg)](https://www.npmjs.com/package/@jaredreisinger/react-crossword)
-[![build status](https://img.shields.io/travis/JaredReisinger/react-crossword/master.svg)](https://travis-ci.org/JaredReisinger/react-crossword)
-[![code coverage](https://img.shields.io/codecov/c/gh/JaredReisinger/react-crossword.svg)](https://codecov.io/gh/JaredReisinger/react-crossword)<br />
-[![known vulnerabilities](https://img.shields.io/snyk/vulnerabilities/github/JaredReisinger/react-crossword.svg)](https://snyk.io/test/github/JaredReisinger/react-crossword?targetFile=package.json)
-[![dependencies](https://img.shields.io/david/JaredReisinger/react-crossword.svg)](https://david-dm.org/JaredReisinger/react-crossword)
-[![dev dependencies](https://img.shields.io/david/dev/JaredReisinger/react-crossword.svg)](https://david-dm.org/JaredReisinger/react-crossword?type=dev)
-[![peer dependencies](https://img.shields.io/david/peer/JaredReisinger/react-crossword.svg)](https://david-dm.org/JaredReisinger/react-crossword?type=peer)<br />
-[![license](https://img.shields.io/github/license/JaredReisinger/react-crossword.svg)](./LICENSE)
-![more badges](https://img.shields.io/badge/badges-%F0%9F%91%8D%20are%20fun-orange)
-[![commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
-
 ## Install
 
 ```sh
-npm install --save @jaredreisinger/react-crossword
-  # or #
-yarn add @jaredreisinger/react-crossword
+npm install --save react-crossword-near
+# or
+yarn add react-crossword-near
 ```
 
 ## Usage
 
-> See also the [styleguidist docs for Crossword](https://jaredreisinger.github.io/react-crossword/).
+> See also the [styleguidist docs for from the original Crossword](https://jaredreisinger.github.io/react-crossword).
 
 ```javascript
 import React from 'react';
 
-import Crossword from '@jaredreisinger/react-crossword';
+import Crossword from 'react-crossword-near';
 
 const data = {
   /* ... puzzle data (see below) ... */
@@ -137,3 +125,4 @@ This is an attempt to create a less-opinionated component that's much easier to 
 ## License
 
 [MIT](./LICENSE), © 2020 [Jared Reisinger](https://github.com/JaredReisinger)
+Thank you, Jared!
