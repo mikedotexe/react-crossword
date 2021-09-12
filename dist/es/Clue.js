@@ -27,7 +27,7 @@ var ClueWrapper = _styledComponents["default"].div.attrs(function (props) {
   };
 }).withConfig({
   displayName: "Clue__ClueWrapper",
-  componentId: "sc-1wp335n-0"
+  componentId: "sc-6vr1y0-0"
 })(["cursor:default;background-color:", ";"], function (props) {
   return props.highlight ? props.highlightBackground : 'transparent';
 });
