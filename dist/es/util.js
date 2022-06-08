@@ -5,21 +5,21 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.isAcross = isAcross;
-exports.otherDirection = otherDirection;
-exports.calculateExtents = calculateExtents;
-exports.createEmptyGrid = createEmptyGrid;
-exports.setCluesFilled = setCluesFilled;
-exports.fillClues = fillClues;
-exports.createGridData = createGridData;
+exports.bothDirections = void 0;
 exports.byNumber = byNumber;
+exports.calculateExtents = calculateExtents;
 exports.clearGuesses = clearGuesses;
+exports.createEmptyGrid = createEmptyGrid;
+exports.createGridData = createGridData;
+exports.deserializeGuesses = deserializeGuesses;
+exports.fillClues = fillClues;
+exports.findCorrectAnswers = findCorrectAnswers;
+exports.isAcross = isAcross;
+exports.loadGuesses = loadGuesses;
+exports.otherDirection = otherDirection;
 exports.saveGuesses = saveGuesses;
 exports.serializeGuesses = serializeGuesses;
-exports.loadGuesses = loadGuesses;
-exports.deserializeGuesses = deserializeGuesses;
-exports.findCorrectAnswers = findCorrectAnswers;
-exports.bothDirections = void 0;
+exports.setCluesFilled = setCluesFilled;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 

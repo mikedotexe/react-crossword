@@ -1,8 +1,8 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -27,6 +27,10 @@ var _util = require("./util");
 
 var _context = require("./context");
 
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
 // TODO: make this a component property!
 var defaultStorageKey = 'guesses';
 var defaultTheme = {
@@ -37,7 +41,8 @@ var defaultTheme = {
   textColor: 'rgb(0,0,0)',
   numberColor: 'rgba(0,0,0, 0.6)',
   focusBackground: 'rgb(255,255,0)',
-  highlightBackground: 'rgb(255,255,204)'
+  highlightBackground: 'rgb(255,255,204)',
+  clueHighlightBackground: 'rgb(255,204,204)'
 }; // eslint-disable-next-line
 
 var OuterWrapper = _styledComponents["default"].div.attrs(function (props) {
@@ -62,7 +67,7 @@ var GridWrapper = _styledComponents["default"].div.attrs(function () {
 
 var CluesWrapper = _styledComponents["default"].div.attrs(function () {
   return {
-    className: 'clues'
+    className: 'clues box'
   };
 }).withConfig({
   displayName: "Crossword__CluesWrapper",
@@ -666,7 +671,10 @@ var Crossword = /*#__PURE__*/_react["default"].forwardRef(function (_ref, ref) {
   var cells = [];
 
   if (gridData) {
+    var rowCount = 0;
+    var highestRow;
     gridData.forEach(function (rowData, row) {
+      rowCount += 1;
       rowData.forEach(function (cellData, col) {
         if (!cellData.used) {
           return;
@@ -680,6 +688,7 @@ var Crossword = /*#__PURE__*/_react["default"].forwardRef(function (_ref, ref) {
           highlight: focused && currentNumber && cellData[currentDirection] === currentNumber,
           onClick: handleCellClick
         }));
+        highestRow = row;
       });
     });
   }
@@ -711,13 +720,7 @@ var Crossword = /*#__PURE__*/_react["default"].forwardRef(function (_ref, ref) {
     }
   }, /*#__PURE__*/_react["default"].createElement("svg", {
     viewBox: "0 0 100 100"
-  }, /*#__PURE__*/_react["default"].createElement("rect", {
-    x: 0,
-    y: 0,
-    width: 100,
-    height: 100,
-    fill: finalTheme.gridBackground
-  }), cells), /*#__PURE__*/_react["default"].createElement("input", {
+  }, cells), /*#__PURE__*/_react["default"].createElement("input", {
     ref: inputRef,
     "aria-label": "crossword-input",
     type: "text",
@@ -752,13 +755,21 @@ var Crossword = /*#__PURE__*/_react["default"].forwardRef(function (_ref, ref) {
       border: 0,
       cursor: 'default'
     }
-  }))), /*#__PURE__*/_react["default"].createElement(CluesWrapper, null, clues && _util.bothDirections.map(function (direction) {
-    return /*#__PURE__*/_react["default"].createElement(_DirectionClues["default"], {
-      key: direction,
-      direction: direction,
-      clues: clues[direction]
-    });
-  }))))));
+  }))), /*#__PURE__*/_react["default"].createElement(CluesWrapper, null, clues && /*#__PURE__*/_react["default"].createElement(_react["default"].Fragment, null, /*#__PURE__*/_react["default"].createElement(_DirectionClues["default"], {
+    key: "across",
+    direction: "across",
+    clues: clues.across
+  }), /*#__PURE__*/_react["default"].createElement(_DirectionClues["default"], {
+    key: "down",
+    direction: "down",
+    clues: clues.down
+  }))), /*#__PURE__*/_react["default"].createElement("div", {
+    id: "small-stuff"
+  }, clues && /*#__PURE__*/_react["default"].createElement(_react["default"].Fragment, null, /*#__PURE__*/_react["default"].createElement(_DirectionClues["default"], {
+    key: "down",
+    direction: "down",
+    clues: clues.down
+  })))))));
 });
 
 Crossword.displayName = 'Crossword';
@@ -804,7 +815,8 @@ process.env.NODE_ENV !== "production" ? Crossword.propTypes = {
     /** background color for the cells in the answer the player is working on,
      * helps indicate in which direction focus will be moving; also used as a
      * background on the active clue  */
-    highlightBackground: _propTypes["default"].string
+    highlightBackground: _propTypes["default"].string,
+    clueHighlightBackground: _propTypes["default"].string
   }),
 
   /** whether to use browser storage to persist the player's work-in-progress */

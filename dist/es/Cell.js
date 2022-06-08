@@ -2,7 +2,7 @@
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -16,6 +16,10 @@ var _propTypes = _interopRequireDefault(require("prop-types"));
 var _styledComponents = require("styled-components");
 
 var _context = require("./context");
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 // expected props: row, col, answer, crossword, cellSize
 
@@ -45,7 +49,8 @@ function Cell(_ref) {
       textColor = _useContext2.textColor,
       numberColor = _useContext2.numberColor,
       focusBackground = _useContext2.focusBackground,
-      highlightBackground = _useContext2.highlightBackground;
+      highlightBackground = _useContext2.highlightBackground,
+      clueHighlightBackground = _useContext2.clueHighlightBackground;
 
   var handleClick = (0, _react.useCallback)(function (event) {
     event.preventDefault();
@@ -80,8 +85,8 @@ function Cell(_ref) {
     textAnchor: "start",
     dominantBaseline: "hanging",
     style: {
-      fontSize: '50%',
-      fill: numberColor
+      fontSize: '57%',
+      fill: 'rgb(242,248,226)'
     }
   }, number), /*#__PURE__*/_react["default"].createElement("text", {
     x: x + cellHalf,

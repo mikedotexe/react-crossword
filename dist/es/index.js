@@ -5,12 +5,6 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "ThemeProvider", {
-  enumerable: true,
-  get: function get() {
-    return _styledComponents.ThemeProvider;
-  }
-});
 Object.defineProperty(exports, "Cell", {
   enumerable: true,
   get: function get() {
@@ -21,12 +15,6 @@ Object.defineProperty(exports, "Clue", {
   enumerable: true,
   get: function get() {
     return _Clue["default"];
-  }
-});
-Object.defineProperty(exports, "DirectionClues", {
-  enumerable: true,
-  get: function get() {
-    return _DirectionClues["default"];
   }
 });
 Object.defineProperty(exports, "Crossword", {
@@ -45,6 +33,18 @@ Object.defineProperty(exports, "CrosswordSizeContext", {
   enumerable: true,
   get: function get() {
     return _context.CrosswordSizeContext;
+  }
+});
+Object.defineProperty(exports, "DirectionClues", {
+  enumerable: true,
+  get: function get() {
+    return _DirectionClues["default"];
+  }
+});
+Object.defineProperty(exports, "ThemeProvider", {
+  enumerable: true,
+  get: function get() {
+    return _styledComponents.ThemeProvider;
   }
 });
 exports["default"] = void 0;
