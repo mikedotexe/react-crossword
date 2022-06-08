@@ -40,6 +40,7 @@ const defaultTheme = {
   numberColor: 'rgba(0,0,0, 0.6)',
   focusBackground: 'rgb(255,255,0)',
   highlightBackground: 'rgb(255,255,204)',
+  clueHighlightBackground: 'rgb(255,204,204)',
 };
 
 // eslint-disable-next-line
@@ -70,7 +71,7 @@ const GridWrapper = styled.div.attrs((props) => ({
 `;
 
 const CluesWrapper = styled.div.attrs((props) => ({
-  className: 'clues',
+  className: 'clues box',
 }))`
   padding: 0 1em;
   flex: 1 2 25%;
@@ -757,12 +758,19 @@ const Crossword = React.forwardRef(
 
     // REVIEW: do we want to recalc this all the time, or cache in state?
     const cells = [];
+    let viewBoxHeight = 100;
+    let subtractBottomEmpties = 0;
     if (gridData) {
+      let rowCount = 0;
+      let colCount = 0;
+      let highestRow;
       gridData.forEach((rowData, row) => {
+        rowCount += 1;
         rowData.forEach((cellData, col) => {
           if (!cellData.used) {
             return;
           }
+          colCount += 1;
           cells.push(
             <Cell
               // eslint-disable-next-line react/no-array-index-key
@@ -777,8 +785,12 @@ const Crossword = React.forwardRef(
               onClick={handleCellClick}
             />
           );
+          highestRow = row;
         });
       });
+      viewBoxHeight =
+        ((rowCount - (rowCount - highestRow - 1)) / rowCount) * 100;
+      subtractBottomEmpties = (rowCount - highestRow - 1) * 30 + 2;
     }
 
     return (
@@ -795,16 +807,8 @@ const Crossword = React.forwardRef(
                 cells in the <svg>.
               */}
                 <div style={{ margin: 0, padding: 0, position: 'relative' }}>
-                  <svg viewBox="0 0 100 100">
-                    <rect
-                      x={0}
-                      y={0}
-                      width={100}
-                      height={100}
-                      fill={finalTheme.gridBackground}
-                    />
-                    {cells}
-                  </svg>
+                  <svg viewBox="0 0 100 100">{cells}</svg>
+                   {/*<svg viewBox={`0 0 100 ${viewBoxHeight}`}>{cells}</svg>*/}
                   <input
                     ref={inputRef}
                     aria-label="crossword-input"
@@ -843,15 +847,32 @@ const Crossword = React.forwardRef(
                 </div>
               </GridWrapper>
               <CluesWrapper>
-                {clues &&
-                  bothDirections.map((direction) => (
+                {clues && (
+                  <>
                     <DirectionClues
-                      key={direction}
-                      direction={direction}
-                      clues={clues[direction]}
+                      key="across"
+                      direction="across"
+                      clues={clues.across}
                     />
-                  ))}
+                    <DirectionClues
+                      key="down"
+                      direction="down"
+                      clues={clues.down}
+                    />
+                  </>
+                )}
               </CluesWrapper>
+              <div id="small-stuff">
+                {clues && (
+                  <>
+                    <DirectionClues
+                      key="down"
+                      direction="down"
+                      clues={clues.down}
+                    />
+                  </>
+                )}
+              </div>
             </OuterWrapper>
           </ThemeProvider>
         </CrosswordSizeContext.Provider>
@@ -899,6 +920,7 @@ Crossword.propTypes = {
      * helps indicate in which direction focus will be moving; also used as a
      * background on the active clue  */
     highlightBackground: PropTypes.string,
+    clueHighlightBackground: PropTypes.string,
   }),
 
   /** whether to use browser storage to persist the player's work-in-progress */

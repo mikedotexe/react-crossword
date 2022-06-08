@@ -25,6 +25,7 @@ export default function Cell({ cellData, onClick, focus, highlight }) {
     numberColor,
     focusBackground,
     highlightBackground,
+    clueHighlightBackground
   } = useContext(ThemeContext);
 
   const handleClick = useCallback(
@@ -68,7 +69,10 @@ export default function Cell({ cellData, onClick, focus, highlight }) {
           y={y + cellPadding * 4}
           textAnchor="start"
           dominantBaseline="hanging"
-          style={{ fontSize: '50%', fill: numberColor }}
+          style={{
+            fontSize: '57%',
+            fill: 'rgb(242,248,226)',
+          }}
         >
           {number}
         </text>
